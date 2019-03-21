@@ -233,3 +233,5 @@ while end != 1:
       randomrewardgenerator(reward,n)
    else:
       print("Unidentified command, please try again")
+print("Thanks for using the Random Dungeon Generator")
+print("Made by KasuganoAichi(Github)")
