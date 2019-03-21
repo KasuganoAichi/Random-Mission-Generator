@@ -1,5 +1,5 @@
-"""THIS PROGRAM ONLY USE IS TO GENERATE THE TITLE OF A RANDOM QUEST/MISSION
-   FOR POKEMON MYSTERY DUNGEON STYLE GAMES, IT WILL NOT GENERATE ENEMIE
+"""THIS PROGRAM ONLY USE IS TO GENERATE THE TITLE OF A RANDOM QUEST/ENCOUNTER
+   FOR POKEMON MYSTERY DUNGEON STYLE GAMES, IT WILL NOT GENERATE ENEMIEs
    POKEMON FOR YOU, IT WILL NOT GENERATE DETAILS OF THE QUEST, IT WILL
    NOT GENERATE RANDOM ENCOUNTERS"""
 
@@ -94,7 +94,7 @@ def enemies(n):
     read = read.rstrip('\n')
     read = read.rstrip('\t')
     while n != 0:
-         while read != 'end':
+        while read != 'end':
             auxlist.append(read)
             read = f.readline()
             read = read.rstrip('\n')
@@ -113,13 +113,16 @@ def enemies(n):
 
 """Collect the possible enemies names (by dungeon) from the enemiesbyplace.txt file"""
    
-def enemiesbyplace(n):
+def enemiesbyplace():
    enemiesdungeonf = 'enemiesbydungeon.txt'
    enemiesdungeon = list()
    auxlist = list()
    read = 'e'
    f = open(enemiesdungeonf,mode = 'r')
-   read = f.readline()
+   n = f.readline()
+   n = n.rstrip('\n')
+   n = n.rstrip('\t')
+   n = int(n)
    "Collects number of dungeons then ignores next line, since it will be a dugeon name"
    read = f.readline()
    read = f.readline()
@@ -232,13 +235,14 @@ def randomdungeongenerator(dungeon):
 def randomclientgenerator(client):
     x = len(client) - 1
     y = random.randint(0,x)
-    print('Client ' + client[y])
+    print('Client: ' + client[y])
       
 """Choose a random adjevtice for the enemy"""
 
 def randomadjectivegenerator(adjectives):
     x = len(adjectives) - 1
-    return y = random.randint(0,x)
+    y = random.randint(0,x)
+    return y
     
    
 """Choose a random enemy for the quest"""
@@ -246,7 +250,7 @@ def randomadjectivegenerator(adjectives):
 def randomenemygenerator(enemies,n):
     x = len(enemies[n]) - 1
     y = random.randint(0,x)
-    print('Enemy: ' + enemies[y])
+    print('Enemy: ' + enemies[n][y])
 
 """Choose a random enemy for an encounter"""
 def randomenemyencountergenerator(enemies,n):
@@ -273,13 +277,13 @@ def randomrewardgenerator(reward,n):
 """Flow control variables"""
 end = 0
 command = '810'
+finished = 0
 """Stores in lists the data provided by the user"""
 quest = quest()
 dungeon = dungeon()
 client = client()
 adjectives = adjectives()
-n = len(dungeon)
-enemiesplace = enemiesplace()
+enemiesbyplace = enemiesbyplace()
 "Instead of opening the reward.txt twice, opens a single time and already save"
 "information that will be used for both, ranks and rewards"
 rewardf = 'rewards.txt'
@@ -309,19 +313,29 @@ while end != 1:
         randomdungeongenerator(dungeon)
         randomclientgenerator(client)
         n = randomrankgenerator(rank)
-        randomenemygenerator(enemies,n,'1')
+        randomenemygenerator(enemies,n)
         randomrewardgenerator(reward,n)
         print('\n')
     elif command == '2':
-        for item in dungeon:
-            strx = str(x)
-            print(strx + ' - ' + rank[x-1])
-            x = x + 1
-        n = int(input("Type the number of the dungeon where the event takes place: ")
-        n = n - 1
-        y = randomenemyencountergenerator(enemiesplace,n)
-        x = randomadjectivegenerator(adjevtives)
-        print("While exploring through the " + dungeon[n] + "the group encountered a(n) " + adjective[x] + enemiesplace[n][y])
+        while finished != 1:
+            "Index starts at 0, thus x-1 will provide the correct placement of the item on the list"
+            for item in dungeon:
+                strx = str(x)
+                print(strx + ' - ' + dungeon[x-1])
+                x = x + 1
+            n = int(input("Type the number of the dungeon where the event takes place: "))
+            if 0 < n < x:
+                n = n - 1
+                y = randomenemyencountergenerator(enemiesbyplace,n)
+                x = randomadjectivegenerator(adjectives)
+                print("While exploring through the " + dungeon[n]
+                      + " the group encountered a(n) " +
+                      adjectives[x] + " " + enemiesbyplace[n][y])
+                finished = 1
+            else:
+                print("Input number out of index range, please try again")
+            x = 1
+        finished = 0
     elif command == '3':
         randomtitlegenerator(quest)
         print('\n')
@@ -336,43 +350,57 @@ while end != 1:
         print('\n')
     elif command == '7':
         "Index starts at 0, thus x-1 will provide the correct placement of the item on the list"
-        for item in rank:
-            strx = str(x)
-            print(strx + ' - ' + rank[x-1])
-            x = x + 1
-        n = input("Type the number of the difficult of the quest: ")
-        n = int(n)
-        n = n - 1
-        x = 1
-        print('\n')
-        randomenemiesgenerator(enemies,n,'1')
-        print('\n')
+        while finished != 1:
+            for item in rank:
+                strx = str(x)
+                print(strx + ' - ' + rank[x-1])
+                x = x + 1
+            n = int(input("Type the number of the difficult of the quest: "))
+            if 0 < n < x:
+                n = n - 1
+                print('\n')
+                randomenemygenerator(enemies,n)
+                print('\n')
+                finished = 1
+            else:
+                print("Input number out of index range, please try again")
+            x = 1
+        finished = 0
     elif command == '8':
         "Index starts at 0, thus x-1 will provide the correct placement of the item on the list"
-        for item in dungeon:
-            strx = str(x)
-            print(strx + ' - ' + rank[x-1])
-            x = x + 1
-        n = input("Type the number of the dungeon where the enemy lives: ")
-        n = int(n)
-        n = n - 1
-        x = 1
-        print('\n')
-        randomenemiesgenerator(enemiesplace,n,'1')
-        print('\n')
+        while finished != 1:
+            for item in dungeon:
+                strx = str(x)
+                print(strx + ' - ' + dungeon[x-1])
+                x = x + 1
+            n = int(input("Type the number of the dungeon where the enemy lives: "))
+            if 0 < n < x:
+                n = n - 1
+                print('\n')
+                randomenemygenerator(enemiesbyplace,n)
+                print('\n')
+                finished = 1
+            else:
+                print("Input number out of index range, please try again")
+            x = 1
+        finished = 0
     elif command == '9':
-        "Index starts at 0, thus x-1 will provide the correct placement of the item on the list"
-        for item in rank:
-            strx = str(x)
-            print(strx + ' - ' + rank[x-1])
-            x = x + 1
-        n = input("Type the number of the difficult of the quest: ")
-        n = int(n)
-        n = n - 1
-        x = 1
-        print('\n')
-        randomrewardgenerator(reward,n)
-        print('\n')
+        while finished != 1:
+            for item in rank:
+                strx = str(x)
+                print(strx + ' - ' + rank[x-1])
+                x = x + 1
+            n = int(input("Type the number of the difficult of the quest: "))
+            if 0 < n < x:
+                n = n - 1
+                print('\n')
+                randomrewardgenerator(reward,n)
+                print('\n')
+                finished = 1
+            else:
+                print("Input number out of index range, please try again")
+            x = 1
+        finished = 0
     else:
         print("Unidentified command, please try again.")
         print('\n')
