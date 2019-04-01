@@ -229,6 +229,7 @@ def randomdungeongenerator(dungeon):
     x = len(dungeon) - 1
     y = random.randint(0,x)
     print('Dungeon: ' + dungeon[y])
+    return y
 
 """Choose a random quest client"""
 
@@ -309,13 +310,23 @@ while end != 1:
     if command == '0':
         end = 1
     elif command == '1':
-        randomtitlegenerator(quest)
-        randomdungeongenerator(dungeon)
-        randomclientgenerator(client)
-        n = randomrankgenerator(rank)
-        randomenemygenerator(enemies,n)
-        randomrewardgenerator(reward,n)
-        print('\n')
+        print("Type 1 to pick the final enemy based on the quest difficult")
+        print("Type 2 to pick the final enemy based on the dungeon\n")
+        command = input()
+        if command == 1:
+            randomtitlegenerator(quest)
+            d = randomdungeongenerator(dungeon)
+            randomclientgenerator(client)
+            n = randomrankgenerator(rank)
+            randomenemygenerator(enemies,n)
+            randomrewardgenerator(reward,n)
+        elif command == 2:
+            randomtitlegenerator(quest)
+            d = randomdungeongenerator(dungeon)
+            randomclientgenerator(client)
+            n = randomrankgenerator(rank)
+            randomenemygenerator(enemies,d)
+            randomrewardgenerator(reward,n)
     elif command == '2':
         while finished != 1:
             "Index starts at 0, thus x-1 will provide the correct placement of the item on the list"
@@ -406,3 +417,4 @@ while end != 1:
         print('\n')
 print("Thanks for using the Random Quest Generator")
 print("Made by KasuganoAichi(Github Username)")
+time.sleep(10)
